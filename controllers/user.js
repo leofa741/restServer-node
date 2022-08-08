@@ -4,30 +4,51 @@ const {response,request} = require('express');
 const Usuario = require('../models/usuarios');
 
 const bcrypt = require('bcryptjs');
-const { validationResult } = require('express-validator');
 
 
 
 
 
-const usuariosGet = (req= request, res= response ) => {
 
-    const {id,nombre} = req.query
+const usuariosGet = async (req= request, res= response ) => {
+    // const {id,nombre} = req.query
+    const {limit=10,skip=0} = req.query;
+    //  const usuarios = await Usuario.find({ estado: true })
+    //  .limit(Number(limit))
+    //     .skip(Number(skip))  
 
+    // const total = await Usuario.countDocuments( { estado: true });
+
+    const [total,usuarios] = await Promise.all([
+        Usuario.countDocuments( { estado: true }),
+        Usuario.find({ estado: true })
+     .limit(Number(limit))
+        .skip(Number(skip))      
+
+    ])
     res.json({        
-        message: 'get API - usuarios',
-        id,
-        nombre
+   total,
+    usuarios 
 
         });
-}
+    }
 
 
-const usuariosPut = (req, res = response) => {
-    const id = req.params.id;
+const usuariosPut =async (req, res = response) => {
+    const {id} = req.params;
+    const {_id,password,google,correo, ...resto} = req.body;
+
+    if(password){
+        const salt = bcrypt.genSaltSync(10);
+        resto.password = bcrypt.hashSync(password, salt);
+    }
+
+    const   usuario = await Usuario.findByIdAndUpdate(id,resto);
+
     res.json({
         message: "put world",
-        id
+        id,
+        usuario
 
     });
 }
@@ -35,37 +56,26 @@ const usuariosPut = (req, res = response) => {
 
 
 const usuariosPost = async (req =request , res =response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    } 
-    const { nombre,correo,password,role}= req.body;  
-
-    const usuario = new Usuario({nombre,correo,password,role});   
-
-    //verificar correo valido
-  const existeCorreo = await Usuario.findOne({correo});
-    if(existeCorreo){
-        return res.status(400).json({
-            ok: false,
-            msg: 'El correo ya existe'
-        });
-    }
-
-
    
+    const { nombre,correo,password,rol}= req.body;  
 
+    const usuario = new Usuario({nombre,correo,password,rol});   
+
+    //verificar correo valido en helpers/db-validators.js
+//   const existeCorreo = await Usuario.findOne({correo});
+//     if(existeCorreo){
+//         return res.status(400).json({
+//             ok: false,
+//             msg: 'El correo ya existe'
+//         });
+//     }   
     //encriptar contraseña
-
         const salt = bcrypt.genSaltSync(10);
         usuario.password = bcrypt.hashSync(password, salt);
-
-
-
      await usuario.save();
 
     res.json({                
-        message: 'post world',
+        message: 'usuario registrado',
         usuario     
         
 
@@ -74,20 +84,19 @@ const usuariosPost = async (req =request , res =response) => {
 
 
 
-const saveUser = (req, res = response) => {
-    const {nombre}= req.body;
-    res.send(nombre);  
-}
 
+const usuariosDelete = async (req, res = response) => {
 
+    const {id} = req.params;
 
+    const usuario = await Usuario.findByIdAndUpdate(id,{estado: false});
 
+    //const usuario = await Usuario.findByIdAndDelete(id);
 
-
-const usuariosDelete = (req, res = response) => {
    
         res.json({
-            ok: true,
+           id,
+            usuario,
             message: 'delete world'
             });
     }
@@ -107,6 +116,6 @@ module.exports = {
     usuariosPost,
     usuariosDelete,
     usuariosPatch,
-    saveUser
+ 
 
 }

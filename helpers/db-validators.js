@@ -1,10 +1,10 @@
 
-const rol = require('../models/role');
+const Role = require('../models/role');
 const Usuario = require('../models/usuarios');
  
 const esRolValido=  async (rol='') => {
-    const rol = await rol.findOne({rol});
-    if(!rol){
+    const role = await Role.findOne({rol});
+    if(!role){
         throw new Error('El rol no existe en la Base de Datos');
     }
     return true;

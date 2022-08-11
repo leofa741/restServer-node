@@ -46,17 +46,12 @@ const login = async (req, res= response) => {
         });
     }
 }
-
 const googleSignin = async(req, res = response) => {
 
-    const body = req.body;
-
-    console.log(body);
-   
+    const { id_token } = req.body;
     
     try {
-        const { correo, nombre, img } = await googleVerify(id_token);
-
+        const { correo, nombre, img } = await googleVerify( id_token );
 
         let usuario = await Usuario.findOne({ correo });
 
@@ -65,13 +60,11 @@ const googleSignin = async(req, res = response) => {
             const data = {
                 nombre,
                 correo,
-                password: ':)',
+                password: ':P',
                 img,
-                google: true,
-                rol: 'USER_ROLE'
+                google: true
             };
 
-          
             usuario = new Usuario( data );
             await usuario.save();
         }
@@ -84,7 +77,7 @@ const googleSignin = async(req, res = response) => {
         }
 
         // Generar el JWT
-        const token = await generarJWT( usuario._id );
+        const token = await generarJWT( usuario.id );
         
         res.json({
             usuario,

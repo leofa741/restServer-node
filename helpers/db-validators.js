@@ -18,10 +18,10 @@ const existeCorreo = async (correo='') => {
      
 }
 
-const existeUsuario = async (id='') => {
-    const existeUsuario = await Usuario.findById(id);
+const existeUsuario = async (_id='') => {
+    const existeUsuario = await Usuario.findById(_id);
     if(!existeUsuario){
-        throw new Error(`El usuario con el id: ${id} no existe`);
+        throw new Error(`El usuario con el id: ${_id} no existe`);
     }
     return true;
 }

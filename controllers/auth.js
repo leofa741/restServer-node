@@ -66,7 +66,7 @@ const googleSignin = async(req=request, res = response) => {
                 password: '',
                 img,
                 google: true,
-                rol: 'USER_ROLE'
+                rol: 'USER_ROLE',
             };
 
             usuario = new Usuario( data );
@@ -81,7 +81,7 @@ const googleSignin = async(req=request, res = response) => {
         }
 
         // Generar el JWT
-        const token = await generarJWT( usuario.id );
+        const token = await generarJWT( usuario._id );
         
         res.json({
             usuario,

@@ -11,7 +11,7 @@ const googleVerify = async( Token = '' ) => {
       // Or, if multiple clients access the backend:
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
   });
-  console.log(idToken);
+ 
   const { name: nombre, 
           picture: img, 
           email: correo

@@ -47,14 +47,16 @@ const login = async (req, res= response) => {
     }
 }
 
-const googleSignin = async(req=request, res = response) => {
+const googleSignin = async(req, res = response) => {
 
     const { id_token } = req.body;
 
+    console.log(id_token);
    
     
     try {
         const { correo, nombre, img } = await googleVerify(id_token);
+
 
         let usuario = await Usuario.findOne({ correo });
 
@@ -69,7 +71,7 @@ const googleSignin = async(req=request, res = response) => {
                 rol: 'USER_ROLE'
             };
 
-            console.log(data);
+          
             usuario = new Usuario( data );
             await usuario.save();
         }

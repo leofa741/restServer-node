@@ -49,9 +49,9 @@ const login = async (req, res= response) => {
 
 const googleSignin = async(req, res = response) => {
 
-    const { id_token } = req.body;
+    const body = req.body;
 
-    console.log(id_token);
+    console.log(body);
    
     
     try {

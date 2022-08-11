@@ -12,4 +12,4 @@ rol: {
 });
 
 
-module.exports = model('Role', roleSchema);
+module.exports = model('rol', roleSchema);

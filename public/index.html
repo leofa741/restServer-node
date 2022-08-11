@@ -50,6 +50,8 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
+
+           
            
         })
         .then( r=> r.json() )
@@ -58,6 +60,8 @@
             localStorage.setItem('email', resp.usuario.correo )
         })
         .catch( console.warn )
+
+        console.log(body)
     }
 
 

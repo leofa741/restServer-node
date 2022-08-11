@@ -43,7 +43,8 @@
        
 
         const body = { id_token:response.credential }
-        console.log(body)   fetch('https://restservernodeleo.herokuapp.com/api/auth/google', {
+     
+        fetch('https://restservernodeleo.herokuapp.com/api/auth/google', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
